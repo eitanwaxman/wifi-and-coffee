@@ -21,10 +21,8 @@ function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
       <ThemeProvider theme={theme}>
-        <main className={manrope.className}>
           <Navbar />
           <Component {...pageProps} />
-        </main>
       </ThemeProvider>
     </UserProvider>
   )

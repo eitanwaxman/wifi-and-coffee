@@ -13,12 +13,16 @@
     "@emotion/styled": "^11.10.5",
     "@mui/material": "^5.10.15",
     "@next/font": "^13.0.5",
+    "@sendgrid/mail": "^7.7.0",
     "@uploadcare/react-widget": "^2.3.0",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
+    "leaflet": "^1.9.3",
     "next": "13.0.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-mui-fileuploader": "^0.3.0"
+    "react-leaflet": "^4.2.0",
+    "react-mui-fileuploader": "^0.3.0",
+    "sib-api-v3-sdk": "^8.4.2"
   }
 }

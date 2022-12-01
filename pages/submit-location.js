@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../contexts/user-context";
 import { Widget } from "@uploadcare/react-widget";
 import Image from "next/image";
+import { slugify } from "../utils/general";
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -22,6 +23,7 @@ export default function SubmitLocation() {
         longitude: "",
         city: "",
         country: "",
+        slug: "",
         cover_image: null,
     })
 
@@ -53,6 +55,9 @@ export default function SubmitLocation() {
     const changeHandler = (event) => {
         console.log(event.target.value);
         setLocationData((prev) => ({ ...prev, [event.target.name]: event.target.value }))
+        if (event.target.name === "title") {
+            setLocationData((prev) => ({ ...prev, slug: slugify(title)}))
+        }
     }
 
     const inputHandler = (event) => {
@@ -103,7 +108,8 @@ export default function SubmitLocation() {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '100vh',
+                // height: '100vh',
+                padding: 3,
             }}>
 
                 <Stack spacing={2} sx={{ width: '50%', textAlign: "center" }}>
@@ -115,30 +121,36 @@ export default function SubmitLocation() {
                         <Stack spacing={1}>
                             <h3>{locationData.title ? locationData.title : "Title"}</h3>
                             <p>{locationData.address ? locationData.address : "Address"}</p>
-                            <Box sx={{ 
-                                position: "relative", 
-                                height: "200px", 
-                                width: "100%", 
-                                borderRadius: "15px", 
-                                overflow: "hidden" 
-                                }}>
+                            <Box sx={{
+                                position: "relative",
+                                height: "200px",
+                                width: "100%",
+                                borderRadius: "15px",
+                                overflow: "hidden"
+                            }}>
                                 {locationData.cover_image && <Image src={locationData.cover_image} fill />}
                             </Box>
                         </Stack>
                     </Paper>
-                    <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
-                    <Autocomplete
-                        name="address"
-                        options={addressOptions}
-                        renderInput={(params) => <TextField {...params} label="Address" onInput={inputHandler} />}
-                        onChange={autocompleteHandler}
-                    />
-                    <p>
-                        <label htmlFor='file'>Please select a cover image:</label>{' '}
-                        <Widget publicKey='3152c288f14a4c812f60' id='file' name='image' crop="3:2"
-                            onChange={fileUploadHandler} />
-                    </p>
-                    <Button id="submit" variant="contained" onClick={submitHandler}>Submit</Button>
+                    <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
+                        <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
+                        <Autocomplete
+                            name="address"
+                            options={addressOptions}
+                            renderInput={(params) => <TextField {...params} label="Address" onInput={inputHandler} />}
+                            onChange={autocompleteHandler}
+                        />
+                        <p>
+                            <label htmlFor='file'>Please select a cover image:</label>{' '}
+                            <Widget publicKey='3152c288f14a4c812f60' id='file' name='image' crop="3:2"
+                                onChange={fileUploadHandler} />
+                        </p>
+                        <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
+                    </Stack>
+                    <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
+                        <p>Add a first review about this location!</p>
+
+                    </Stack>
                 </Stack>
             </Box>
         </>

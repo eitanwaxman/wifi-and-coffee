@@ -2,9 +2,9 @@
 
 export default function handler(req, res) {
 
-
   const TOKEN = process.env.DIRECTUS_TOKEN;
   const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
+
   const { email, password } = req.body;
   const addNewUser = async (email, password) => {
     const body = {
@@ -31,6 +31,6 @@ export default function handler(req, res) {
     res.status(200).json({ message: "user registered successfully" });
   } catch (error) {
     console.log(error);
-    res.status(200).json({ error });
+    res.status(400).json({ error });
   }
 }

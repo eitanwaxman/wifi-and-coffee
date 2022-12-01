@@ -1,10 +1,14 @@
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { Box, Stack, Paper } from "@mui/material";
 import Image from "next/image";
 
+
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
 export default function Locations() {
+
+    const router = useRouter();
 
     const [locations, setLocations] = useState([]);
 
@@ -19,12 +23,17 @@ export default function Locations() {
         getLocations();
     }, [])
 
+    const navigateToLocationHandler = (slug) => {
+        console.log(slug)
+        router.push(`/location/${slug}`)
+    }
+
     return (
         <>
             <Box sx={{
                 padding: 3,
             }}>
-                <Stack spacing={1} sx={{textAlign:"center", margin: 3, fontSize: "1.7rem"}}>
+                <Stack spacing={1} sx={{ textAlign: "center", margin: 3, fontSize: "1.7rem" }}>
                     <h1>Browse Locations</h1>
                     <p>Find the ideal place to sink in for some work, a study session, or just a nice cup of joe...</p>
                 </Stack>
@@ -43,9 +52,11 @@ export default function Locations() {
                                 textAlign: "left",
                                 borderRadius: "15px",
                                 "&:hover": {
-                                    border: "solid #783600 2px" 
+                                    border: "solid #783600 2px"
                                 }
-                            }}>
+                            }}
+                                onClick={()=>{navigateToLocationHandler(location.slug)}}
+                            >
                                 <Stack spacing={1}>
                                     <h3>{location.title ? location.title : "Title"}</h3>
                                     <p>{location.address ? location.address : "Address"}</p>
