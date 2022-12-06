@@ -96,7 +96,7 @@ export default function Location() {
                                     readOnly
                                 />
                                 <br></br>
-                                {reviews.map((review) => <p>&quot;{review.text}&quot;</p>)}
+                                {reviews.map((review, index) => <p key={index}>&quot;{review.text}&quot;</p>)}
                             </>
                             :
                             <p>No reviews yet</p>
