@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-import { Box, Stack, Rating } from '@mui/material';
+import { Box, Stack, Rating, Button, Modal, Paper } from '@mui/material';
 import Image from 'next/image'
 import Map from '../../components/map';
+import ReviewModel from '../../components/review-model';
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -20,6 +21,10 @@ export default function Location() {
         coffee: null,
         wifi: null,
     })
+
+    const [reviewModal, setReviewModal] = useState(false);
+    const handleOpenReviewModal = () => setReviewModal(true);
+    const handleCloseReviewModal = () => setReviewModal(false);
 
 
     const getLocation = async (slug) => {
@@ -76,19 +81,47 @@ export default function Location() {
                         <h1>{thisLocation?.title}</h1>
                         <p>{thisLocation?.address}</p>
                         <br></br>
-                        <p>Coffee ☕</p>
-                        <Rating
-                            name="coffee_rating"
-                            value={ratings.coffee}
-                            readOnly
-                        />
-                        <p>Wifi 🌐</p>
-                        <Rating
-                            name="wifi_rating"
-                            value={ratings.wifi}
-                            readOnly
-                        />
+                        {reviews?.length > 0 ?
+                            <>
+                                <p>Coffee ☕</p>
+                                <Rating
+                                    name="coffee_rating"
+                                    value={ratings.coffee}
+                                    readOnly
+                                />
+                                <p>Wifi 🌐</p>
+                                <Rating
+                                    name="wifi_rating"
+                                    value={ratings.wifi}
+                                    readOnly
+                                />
+                                <br></br>
+                                {reviews.map((review) => <p>"{review.text}"</p>)}
+                            </>
+                            :
+                            <p>No reviews yet</p>
+                        }
+                        <Button onClick={handleOpenReviewModal}>Add a Review</Button>
                     </Stack>
+                    <Modal
+                        open={reviewModal}
+                        onClose={handleCloseReviewModal}
+                        aria-labelledby="review-modal"
+                        aria-describedby="add-a-review"
+                    >
+                        <Paper sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            boxShadow: 24,
+                            p: 4,
+                        }}>
+                            <ReviewModel locationId={thisLocation?._id} />
+                        </Paper>
+                    </Modal>
                     <Box sx={{
                         position: "relative",
                         height: "200px",

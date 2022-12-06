@@ -2,10 +2,14 @@ import { Button, TextField, Stack, Box, Checkbox, FormControlLabel } from "@mui/
 import { useState, useContext } from "react";
 import { UserContext } from "../contexts/user-context";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
 export default function Login() {
+
+    const router = useRouter();
+
     const { updateUserCredentials, updateUserCookieOption, user } = useContext(UserContext);
 
     const [userCredentials, setUserCredentials] = useState({
@@ -34,11 +38,12 @@ export default function Login() {
             "body": JSON.stringify(body),
         }
         const response = await fetch(DIRECTUS_DOMAIN + "/auth/login", options);
-        const {data} = await response.json();
+        const { data } = await response.json();
         console.log(data);
         if (data) {
             updateUserCredentials(data);
             updateUserCookieOption(storeCookie);
+            router.push("/locations");
         }
     }
 
@@ -57,7 +62,7 @@ export default function Login() {
                     <p>Don&apos;t have an account yet? Click <span><Link href="/signup">here</Link></span> to sign up</p>
                     <TextField id="email" name="email" label="Email" variant="outlined" required onChange={inputChangeHandler} />
                     <TextField id="password" name="password" label="Password" type="password" variant="outlined" required onChange={inputChangeHandler} />
-                    <FormControlLabel control={ <Checkbox onChange={checkboxHandler} />} label="Store my info in a 🍪 for safe keeping"/>
+                    <FormControlLabel control={<Checkbox onChange={checkboxHandler} />} label="Store my info in a 🍪 for safe keeping" />
                     <Button id="submit" variant="contained" onClick={loginUser}>Submit</Button>
                 </Stack>
             </Box>

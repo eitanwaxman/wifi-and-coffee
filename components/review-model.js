@@ -40,7 +40,7 @@ export default function ReviewModel({locationId}) {
 
 
     return (<>
-        <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
+        <Stack spacing={2} sx={{ width: '100%' }}>
             <h3>Add a first review about this location!</h3>
             <p>Rate the coffee ☕</p>
             <Rating

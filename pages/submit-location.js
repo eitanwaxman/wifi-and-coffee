@@ -7,6 +7,7 @@ import Image from "next/image";
 import { slugify } from "../utils/general";
 import ReviewModel from "../components/review-model";
 import { v4 as uuidv4 } from 'uuid';
+import Link from 'next/link'
 
 
 
@@ -30,6 +31,8 @@ export default function SubmitLocation() {
         slug: "",
         cover_image: null,
     })
+
+    const [locationSubmitted, setLocationSubmitted] = useState(false);
 
     const populateAddressOptions = (data) => {
         let options = [];
@@ -102,6 +105,30 @@ export default function SubmitLocation() {
         };
         const response = await fetch(DIRECTUS_DOMAIN + "/items/locations", options);
         console.log(response);
+        if (response.status === 204) {
+            setLocationSubmitted(true);
+        } else {
+            const data = await response.json();
+            console.log(data);
+        }
+
+    }
+
+    if (!user) {
+        return (
+            <>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // height: '100vh',
+                    padding: 3,
+                }}>
+                    <p>Please <span><Link href="/login">log in</Link></span> to submit a location</p>
+                </Box>
+            </>
+        )
     }
 
     return (
@@ -114,9 +141,29 @@ export default function SubmitLocation() {
                 // height: '100vh',
                 padding: 3,
             }}>
+                <h1>Submit a Location</h1>
+                <br></br>
+                <Stack spacing={2} sx={{ width: '80%', textAlign: "center" }} direction="row">
 
-                <Stack spacing={2} sx={{ width: '50%', textAlign: "center" }}>
-                    <h1>Submit a Location</h1>
+                    {!locationSubmitted ?
+                        <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
+                            <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
+                            <Autocomplete
+                                name="address"
+                                options={addressOptions}
+                                renderInput={(params) => <TextField {...params} label="Address" onInput={inputHandler} />}
+                                onChange={autocompleteHandler}
+                            />
+                            <p>
+                                <label htmlFor='file'>Please select a cover image:</label>{' '}
+                                <Widget publicKey='3152c288f14a4c812f60' id='file' name='image' crop="3:2"
+                                    onChange={fileUploadHandler} />
+                            </p>
+                            <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
+                        </Stack> :
+                        <ReviewModel locationId={locationData.id} />
+                    }
+
                     <Paper elevation={3} sx={{
                         padding: 3,
                         textAlign: "left",
@@ -127,6 +174,7 @@ export default function SubmitLocation() {
                             <Box sx={{
                                 position: "relative",
                                 height: "200px",
+                                minWidth: "200px",
                                 width: "100%",
                                 borderRadius: "15px",
                                 overflow: "hidden"
@@ -135,23 +183,9 @@ export default function SubmitLocation() {
                             </Box>
                         </Stack>
                     </Paper>
-                    <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
-                        <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
-                        <Autocomplete
-                            name="address"
-                            options={addressOptions}
-                            renderInput={(params) => <TextField {...params} label="Address" onInput={inputHandler} />}
-                            onChange={autocompleteHandler}
-                        />
-                        <p>
-                            <label htmlFor='file'>Please select a cover image:</label>{' '}
-                            <Widget publicKey='3152c288f14a4c812f60' id='file' name='image' crop="3:2"
-                                onChange={fileUploadHandler} />
-                        </p>
-                        <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
-                    </Stack>
-                    <ReviewModel locationId={locationData.id} />
                 </Stack>
+
+
             </Box>
         </>
     )

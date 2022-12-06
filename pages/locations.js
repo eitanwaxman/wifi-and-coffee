@@ -51,8 +51,9 @@ export default function Locations() {
                                 padding: 2,
                                 textAlign: "left",
                                 borderRadius: "15px",
+                                cursor: "pointer",
                                 "&:hover": {
-                                    border: "solid #783600 2px"
+                                    outline: "solid #783600 2px"
                                 }
                             }}
                                 onClick={() => { navigateToLocationHandler(location.slug) }}
