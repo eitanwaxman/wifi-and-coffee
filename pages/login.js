@@ -54,7 +54,7 @@ export default function Login() {
             }}>
                 <Stack spacing={2}>
                     <h1>Log in</h1>
-                    <p>Don't have an account yet? Click <span><Link href="/signup">here</Link></span> to sign up</p>
+                    <p>Don&apos;t have an account yet? Click <span><Link href="/signup">here</Link></span> to sign up</p>
                     <TextField id="email" name="email" label="Email" variant="outlined" required onChange={inputChangeHandler} />
                     <TextField id="password" name="password" label="Password" type="password" variant="outlined" required onChange={inputChangeHandler} />
                     <FormControlLabel control={ <Checkbox onChange={checkboxHandler} />} label="Store my info in a 🍪 for safe keeping"/>
