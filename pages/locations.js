@@ -55,7 +55,7 @@ export default function Locations() {
                                     border: "solid #783600 2px"
                                 }
                             }}
-                                onClick={()=>{navigateToLocationHandler(location.slug)}}
+                                onClick={() => { navigateToLocationHandler(location.slug) }}
                             >
                                 <Stack spacing={1}>
                                     <h3>{location.title ? location.title : "Title"}</h3>

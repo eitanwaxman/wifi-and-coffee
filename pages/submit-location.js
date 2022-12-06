@@ -5,6 +5,9 @@ import { UserContext } from "../contexts/user-context";
 import { Widget } from "@uploadcare/react-widget";
 import Image from "next/image";
 import { slugify } from "../utils/general";
+import ReviewModel from "../components/review-model";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -17,6 +20,7 @@ export default function SubmitLocation() {
     const [queryTimeout, setQueryTimeout] = useState();
     const [addressOptions, setAddressOptions] = useState([{ label: "Start typing to select an address", value: {} }])
     const [locationData, setLocationData] = useState({
+        _id: uuidv4(),
         title: "",
         address: "",
         latitude: "",
@@ -56,7 +60,7 @@ export default function SubmitLocation() {
         console.log(event.target.value);
         setLocationData((prev) => ({ ...prev, [event.target.name]: event.target.value }))
         if (event.target.name === "title") {
-            setLocationData((prev) => ({ ...prev, slug: slugify(title)}))
+            setLocationData((prev) => ({ ...prev, slug: slugify(event.target.value) }))
         }
     }
 
@@ -67,7 +71,6 @@ export default function SubmitLocation() {
     }
 
     const autocompleteHandler = (event, newValue) => {
-        ;
         console.log(newValue.value);
         setLocationData((prev) => ({
             ...prev,
@@ -147,10 +150,7 @@ export default function SubmitLocation() {
                         </p>
                         <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
                     </Stack>
-                    <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
-                        <p>Add a first review about this location!</p>
-
-                    </Stack>
+                    <ReviewModel locationId={locationData.id} />
                 </Stack>
             </Box>
         </>
