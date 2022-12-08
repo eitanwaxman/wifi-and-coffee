@@ -47,7 +47,7 @@ export default function Login() {
         }
     }
 
-    if (user.data) {
+    if (user?.data) {
         router.push("/");
     }
 

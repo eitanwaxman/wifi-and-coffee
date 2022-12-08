@@ -9,7 +9,7 @@ export default function Signup() {
     const {user} = useContext(UserContext);
     const router = useRouter();
 
-    if (user.data) {
+    if (user?.data) {
         router.push("/");
     }
 
