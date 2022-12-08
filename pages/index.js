@@ -26,7 +26,7 @@ export default function Home() {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '90vh',
+        // height: "max-content",
       }}>
         <Container sx={{ padding: 3 }}>
           <Stack sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>

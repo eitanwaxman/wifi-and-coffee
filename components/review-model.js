@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
-export default function ReviewModel({locationId}) {
+export default function ReviewModel({ locationId, onSuccess }) {
     const { user, refreshAccessToken } = useContext(UserContext);
 
     const [review, setReview] = useState({
@@ -35,6 +35,9 @@ export default function ReviewModel({locationId}) {
         };
         const response = await fetch(DIRECTUS_DOMAIN + "/items/reviews", options);
         console.log(response);
+        if (response.status === 204) {
+            onSuccess();
+        }
     }
 
 
@@ -42,18 +45,22 @@ export default function ReviewModel({locationId}) {
     return (<>
         <Stack spacing={2} sx={{ width: '100%' }}>
             <h3>Add a first review about this location!</h3>
-            <p>Rate the coffee ☕</p>
-            <Rating
-                name="coffee_rating"
-                value={review.coffee_rating}
-                onChange={changeHandler}
-            />
-            <p>Rate the wifi 🌐</p>
-            <Rating
-                name="wifi_rating"
-                value={review.wifi_rating}
-                onChange={changeHandler}
-            />
+            <Stack direction="row">
+                <p>Rate the coffee ☕</p>
+                <Rating
+                    name="coffee_rating"
+                    value={review.coffee_rating}
+                    onChange={changeHandler}
+                />
+            </Stack>
+            <Stack direction="row">
+                <p>Rate the wifi 🌐</p>
+                <Rating
+                    name="wifi_rating"
+                    value={review.wifi_rating}
+                    onChange={changeHandler}
+                />
+            </Stack>
             <p>Tell us about your remote working experiance!</p>
             <TextField
                 id="text"

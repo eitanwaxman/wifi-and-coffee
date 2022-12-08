@@ -1,6 +1,6 @@
 
 import { Autocomplete, Box, Stack, TextField, Button, Paper } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user-context";
 import { Widget } from "@uploadcare/react-widget";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { slugify } from "../utils/general";
 import ReviewModel from "../components/review-model";
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link'
+import { useRouter } from "next/router";
 
 
 
@@ -15,6 +16,8 @@ const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
 
 export default function SubmitLocation() {
+
+    const router = useRouter();
 
     const { user, refreshAccessToken } = useContext(UserContext);
 
@@ -33,6 +36,10 @@ export default function SubmitLocation() {
     })
 
     const [locationSubmitted, setLocationSubmitted] = useState(false);
+
+    useEffect(() => {
+        console.log(user);
+    }, [user])
 
     const populateAddressOptions = (data) => {
         let options = [];
@@ -114,7 +121,11 @@ export default function SubmitLocation() {
 
     }
 
-    if (!user) {
+    const navigateToLocation = () => {
+        router.push(`/location/${locationData.slug}`);
+    }
+
+    if (!user?.data) {
         return (
             <>
                 <Box sx={{
@@ -143,10 +154,19 @@ export default function SubmitLocation() {
             }}>
                 <h1>Submit a Location</h1>
                 <br></br>
-                <Stack spacing={2} sx={{ width: '80%', textAlign: "center" }} direction="row">
+                <Stack spacing={2} sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 3,
+                    flexWrap: "wrap",
+                    width: '90%',
+                    textAlign: "center",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}>
 
                     {!locationSubmitted ?
-                        <Stack spacing={2} sx={{ width: '100%', textAlign: "center" }}>
+                        <Stack spacing={2} sx={{ width: '100%', maxWidth: "500px", textAlign: "center" }}>
                             <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
                             <Autocomplete
                                 name="address"
@@ -161,21 +181,24 @@ export default function SubmitLocation() {
                             </p>
                             <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
                         </Stack> :
-                        <ReviewModel locationId={locationData.id} />
+                        <Box>
+                        <ReviewModel locationId={locationData._id} onSuccess={navigateToLocation} />
+                        </Box>
                     }
 
                     <Paper elevation={3} sx={{
                         padding: 3,
                         textAlign: "left",
+                        width: "400px",
                     }}>
                         <Stack spacing={1}>
                             <h3>{locationData.title ? locationData.title : "Title"}</h3>
                             <p>{locationData.address ? locationData.address : "Address"}</p>
                             <Box sx={{
                                 position: "relative",
-                                height: "200px",
-                                minWidth: "200px",
-                                width: "100%",
+                                height: "250px",
+                                //minWidth: "300px",
+                                width: "300",
                                 borderRadius: "15px",
                                 overflow: "hidden"
                             }}>

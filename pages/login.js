@@ -47,6 +47,10 @@ export default function Login() {
         }
     }
 
+    if (user.data) {
+        router.push("/");
+    }
+
     return (
         <>
             <Box sx={{

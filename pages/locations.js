@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { Box, Stack, Paper } from "@mui/material";
+import { Box, Stack, Paper, Button } from "@mui/material";
 import Image from "next/image";
 
 
@@ -32,6 +32,7 @@ export default function Locations() {
         <>
             <Box sx={{
                 padding: 3,
+                textAlign: "center"
             }}>
                 <Stack spacing={1} sx={{ textAlign: "center", margin: 3, fontSize: "1.7rem" }}>
                     <h1>Browse Locations</h1>
@@ -58,7 +59,12 @@ export default function Locations() {
                             }}
                                 onClick={() => { navigateToLocationHandler(location.slug) }}
                             >
-                                <Stack spacing={1}>
+                                <Stack sx={{
+                                    height: "100%",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "space-between"
+                                }}>
                                     <h3>{location.title ? location.title : "Title"}</h3>
                                     <p>{location.address ? location.address : "Address"}</p>
                                     <Box sx={{
@@ -75,6 +81,8 @@ export default function Locations() {
                         </>
                     )}
                 </Box>
+                <br></br>
+                <Button onClick={()=> router.push("/submit-location")}>Add a Location</Button>
             </Box>
         </>
     )

@@ -85,7 +85,12 @@ export const UserProvider = ({ children }) => {
         setUser((prev) => ({ ...prev, data }))
     }
 
-    const value = { user, updateUserCredentials, updateUserData, updateUserCookieOption, refreshAccessToken }
+    const logout = ()=>{
+        setUser(defaultUser);
+        sessionStorage.setItem("user", JSON.stringify(defaultUser));
+    }
+
+    const value = { user, updateUserCredentials, updateUserData, updateUserCookieOption, refreshAccessToken, logout }
 
     return (
         <UserContext.Provider value={value}>
