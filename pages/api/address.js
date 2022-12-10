@@ -3,8 +3,11 @@
 export default async function getAddress(req, res) {
     // if (!process.env.RAPID_API_KEY) return;
     console.log(process.env.RAPID_API_KEY);
-    const addressQuery = req.body;
-    const url = `https://address-completion.p.rapidapi.com/v1/geocode/autocomplete?text=${addressQuery}&limit=5&lang=en`;
+    const { text, longitude, latitude } = req.body;
+    console.log(text, longitude, latitude)
+    let url = `https://address-completion.p.rapidapi.com/v1/geocode/autocomplete?text=${text}&limit=5&lang=en`;
+    if (longitude) url += `&lon=${longitude}`;
+    if (latitude) url += `&lat=${latitude}`;
     const options = {
         method: "GET",
         headers: {
@@ -15,7 +18,7 @@ export default async function getAddress(req, res) {
     try {
         const response = await fetch(url, options);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         res.send(data);
     } catch (error) {
         console.log(error);

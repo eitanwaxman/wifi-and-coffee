@@ -44,7 +44,7 @@ export default function ReviewModel({ locationId, onSuccess }) {
 
     return (<>
         <Stack spacing={2} sx={{ width: '100%' }}>
-            <h3>Add a first review about this location!</h3>
+            <h3>Add a review about this location!</h3>
             <Stack direction="row">
                 <p>Rate the coffee ☕</p>
                 <Rating

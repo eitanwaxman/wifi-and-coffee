@@ -4,6 +4,7 @@ import Navbar from '../components/navbar'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Manrope } from '@next/font/google'
 import Head from 'next/head';
+import { LocationProvider } from '../contexts/location-context';
 
 const manrope = Manrope({ subsets: ['latin'] })
 
@@ -21,9 +22,11 @@ function MyApp({ Component, pageProps }) {
   return (
     <UserProvider>
       <ThemeProvider theme={theme}>
+        <LocationProvider>
           <Navbar />
           <Component {...pageProps} />
-          <p style={{width: "100%", textAlign: "center", padding: "10px"}}>V 0.1</p>
+          <p style={{ width: "100%", textAlign: "center", padding: "10px" }}>V 0.2</p>
+        </LocationProvider>
       </ThemeProvider>
     </UserProvider>
   )

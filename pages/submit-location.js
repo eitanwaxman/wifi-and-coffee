@@ -9,6 +9,10 @@ import ReviewModel from "../components/review-model";
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link'
 import { useRouter } from "next/router";
+import Map from "../components/map"
+import { LocationContext } from "../contexts/location-context";
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 
 
 
@@ -20,6 +24,11 @@ export default function SubmitLocation() {
     const router = useRouter();
 
     const { user, refreshAccessToken } = useContext(UserContext);
+    const { location } = useContext(LocationContext);
+
+    useEffect(() => {
+        console.log(location);
+    }, [location])
 
     const [queryTimeout, setQueryTimeout] = useState();
     const [addressOptions, setAddressOptions] = useState([{ label: "Start typing to select an address", value: {} }])
@@ -42,18 +51,26 @@ export default function SubmitLocation() {
     }, [user])
 
     const populateAddressOptions = (data) => {
+        console.log("populating options")
         let options = [];
         data.features?.forEach((location) => {
             const option = { label: location.properties.formatted, value: location.properties };
             options.push(option);
-
+            console.log(options.length, data.features.length)
             if (options.length === data.features.length) {
-                setAddressOptions(options);
+                setAddressOptions([...options]);
             }
         })
     }
 
-    const queryAddress = async (addressQuery) => {
+    const queryAddress = async (text) => {
+        console.log("querying address")
+        const { longitude, latitude } = location;
+        const addressQuery = {
+            text,
+            longitude,
+            latitude
+        }
         const response = await fetch("/api/address", {
             method: "POST",
             body: JSON.stringify(addressQuery),
@@ -70,18 +87,19 @@ export default function SubmitLocation() {
         console.log(event.target.value);
         setLocationData((prev) => ({ ...prev, [event.target.name]: event.target.value }))
         if (event.target.name === "title") {
-            setLocationData((prev) => ({ ...prev, slug: slugify(event.target.value) }))
+            setLocationData((prev) => ({ ...prev, slug: slugify(event.target.value) + `-${locationData._id}` }))
         }
     }
 
     const inputHandler = (event) => {
-        const input = event.target.value;
+        console.log("input recived")
+        const input = event.target.value.trim();
         clearTimeout(queryTimeout);
         setQueryTimeout(setTimeout(() => { queryAddress(input) }, 500));
     }
 
     const autocompleteHandler = (event, newValue) => {
-        console.log(newValue.value);
+        console.log("autocomplete handler called")
         setLocationData((prev) => ({
             ...prev,
             address: newValue?.value.formatted,
@@ -173,6 +191,8 @@ export default function SubmitLocation() {
                                 options={addressOptions}
                                 renderInput={(params) => <TextField {...params} label="Address" onInput={inputHandler} />}
                                 onChange={autocompleteHandler}
+                                loading={addressOptions.length === 0}
+                                filterOptions={(x) => x}
                             />
                             <p>
                                 <label htmlFor='file'>Please select a cover image:</label>{' '}
@@ -182,7 +202,7 @@ export default function SubmitLocation() {
                             <Button id="Submit and Continue" variant="contained" onClick={submitHandler}>Submit</Button>
                         </Stack> :
                         <Box>
-                        <ReviewModel locationId={locationData._id} onSuccess={navigateToLocation} />
+                            <ReviewModel locationId={locationData._id} onSuccess={navigateToLocation} />
                         </Box>
                     }
 
@@ -203,6 +223,7 @@ export default function SubmitLocation() {
                                 overflow: "hidden"
                             }}>
                                 {locationData.cover_image && <Image src={locationData.cover_image} fill />}
+                                {locationData.longitude && locationData.latitude && <Map longitude={locationData.longitude} latitude={locationData.latitude} />}
                             </Box>
                         </Stack>
                     </Paper>

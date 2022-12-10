@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-import { Box, Stack, Rating, Button, Modal, Paper } from '@mui/material';
+import { Box, Stack, Rating, Button, Modal, Paper, Alert } from '@mui/material';
 import Image from 'next/image'
 import Map from '../../components/map';
 import ReviewModel from '../../components/review-model';
+import Link from 'next/link';
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -17,6 +18,7 @@ export default function Location() {
 
     const [thisLocation, setThisLocation] = useState();
     const [reviews, setReviews] = useState([]);
+    const [displayAllReviews, setDisplayAllReviews] = useState(false);
     const [ratings, setRatings] = useState({
         coffee: null,
         wifi: null,
@@ -29,33 +31,31 @@ export default function Location() {
 
     const getLocation = async (slug) => {
         const response = await fetch(DIRECTUS_DOMAIN + `/items/locations?filter[slug][_eq]=${slug}`);
-        console.log(response)
         const { data } = await response.json();
-        console.log(data);
+        console.log("getLocation", data);
         setThisLocation(data[0]);
     }
 
     const getReviews = async () => {
         const response = await fetch(DIRECTUS_DOMAIN + `/items/reviews?filter[location][_eq]=${thisLocation?._id}`);
-        console.log(response)
         const { data } = await response.json();
-        console.log(data);
+        console.log("getReviews", data);
 
         if (data.length < 1) return;
         setReviews(data);
     }
 
     useEffect(() => {
+        if (!slug) return;
         getLocation(slug);
     }, [slug])
 
     useEffect(() => {
-        console.log(thisLocation);
+        if (location.length < 1) return;
         getReviews();
     }, [thisLocation])
 
     useEffect(() => {
-        console.log(reviews);
         const coffeeRatingTotal = reviews.reduce((total, review) => total + review.coffee_rating, 0);
         const coffeeRatingAverage = coffeeRatingTotal / reviews.length;
         setRatings((prev) => ({ ...prev, coffee: coffeeRatingAverage }));
@@ -78,8 +78,15 @@ export default function Location() {
                     padding: 3
                 }}>
                     <Stack>
+                        {thisLocation?.status === "draft" &&
+                            <Alert severity="info">This location is pending review by our moderators - you can still view it and submit reviews.</Alert>
+                        }
                         <h1>{thisLocation?.title}</h1>
-                        <p>{thisLocation?.address}</p>
+                        <span>
+                            <a target="_blank" href={`http://maps.google.com/?q=${thisLocation?.address}`}>
+                                {thisLocation?.address}
+                            </a>
+                        </span>
                         <br></br>
                         {reviews?.length > 0 ?
                             <>
@@ -96,12 +103,31 @@ export default function Location() {
                                     readOnly
                                 />
                                 <br></br>
-                                {reviews.map((review, index) => <p key={index}>&quot;{review.text}&quot;</p>)}
+                                {!displayAllReviews ?
+
+                                    reviews.slice(0, 2).map((review, index) =>
+                                        < div key={index}>
+                                            <p >&quot;{review.text}&quot;</p>
+                                            <br></br>
+                                        </div>
+                                    )
+                                    :
+                                    <>
+                                        <h3>All Reviews</h3>
+                                        {reviews.map((review, index) =>
+                                            < div key={index}>
+                                                <p >&quot;{review.text}&quot;</p>
+                                                <br></br>
+                                            </div>
+                                        )}
+                                    </>
+                                }
                             </>
                             :
                             <p>No reviews yet</p>
                         }
-                        <Button onClick={handleOpenReviewModal}>Add a Review</Button>
+                        <Button onClick={() => { setDisplayAllReviews((prev) => !prev) }}>{!displayAllReviews ? "View All" : "Show Less"}</Button>
+                        <Button variant="contained" onClick={handleOpenReviewModal}>Add a Review</Button>
                     </Stack>
                     <Modal
                         open={reviewModal}
@@ -119,7 +145,7 @@ export default function Location() {
                             boxShadow: 24,
                             p: 4,
                         }}>
-                            <ReviewModel locationId={thisLocation?._id} />
+                            <ReviewModel locationId={thisLocation?._id} onSuccess={handleCloseReviewModal} />
                         </Paper>
                     </Modal>
                     <Box sx={{
@@ -130,7 +156,7 @@ export default function Location() {
                         borderRadius: "15px",
                         overflow: "hidden",
                     }}>
-                        {thisLocation?.cover_image && <Image src={thisLocation?.cover_image} fill />}
+                        {thisLocation?.cover_image && <Image src={thisLocation?.cover_image} alt={thisLocation?.title + thisLocation?.address + " cover image"} fill />}
                     </Box>
                 </Box>
                 {thisLocation?.longitude && thisLocation?.latitude &&

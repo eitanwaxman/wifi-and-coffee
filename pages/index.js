@@ -36,7 +36,7 @@ export default function Home() {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3, fontSize: "1.7rem", maxWidth: "500px" }}>
               <h1>A Home for Remote Workers</h1>
               <p>Discover, share, and review the best remote work and study locations in NYC</p>
-              <Button variant="contained" onClick={waitlistHandler}>Join The Wailist</Button>
+              <Button variant="contained" onClick={waitlistHandler}>Join The Waitlist</Button>
             </Box>
           </Stack>
         </Container>

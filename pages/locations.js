@@ -74,7 +74,7 @@ export default function Locations() {
                                         borderRadius: "15px",
                                         overflow: "hidden"
                                     }}>
-                                        {location.cover_image && <Image src={location.cover_image} fill />}
+                                        {location.cover_image && <Image src={location.cover_image} alt={location?.title + location?.address + " cover image"} fill />}
                                     </Box>
                                 </Stack>
                             </Paper>

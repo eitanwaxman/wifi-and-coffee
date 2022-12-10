@@ -30,7 +30,7 @@ export default function SignupModel() {
         const emailValid = email.includes("@")
         const fNameValid = first_name.length > 2;
         const lNameValid = last_name.length > 2;
-        const passwordValid = password.length > 8;
+        const passwordValid = password.length >= 8;
 
         setFormValid({ emailValid, fNameValid, lNameValid, passwordValid });
 
@@ -95,7 +95,7 @@ export default function SignupModel() {
                 {!signupComplete ?
                     <Stack spacing={2} textAlign="center">
                         <h1>Join the Waitlist</h1>
-                        <p>Already have an account yet? Click <span><Link href="/login">here</Link></span> to log in</p>
+                        <p>Already have an account? Click <span><Link href="/login">here</Link></span> to log in</p>
                         <Stack spacing={2} direction="row">
                             <TextField id="firstName" name="first_name" label="First Name" variant="outlined" required onChange={inputChangeHandler} error={!formValid.fNameValid} />
                             <TextField id="lastName" name="last_name" label="Last Name" variant="outlined" required onChange={inputChangeHandler} error={!formValid.lNameValid} />
@@ -104,7 +104,13 @@ export default function SignupModel() {
                         <TextField id="password" name="password" label="Password" type="password" variant="outlined" required onChange={inputChangeHandler} error={!formValid.passwordValid} />
                         <Button id="submit" variant="contained" onClick={registerUser}>Submit</Button>
                         {(!formValid.emailValid || !formValid.fNameValid || !formValid.lNameValid || !formValid.passwordValid) &&
-                            <p>Uh oh seems you missed something 😅</p>
+                            <>
+                                <p>Uh oh seems you missed something... 😅</p>
+                                {!formValid.emailValid && <p>Please enter a valid email address</p>}
+                                {(!formValid.fNameValid || !formValid.fNameValid) && <p>Names must have at least 2 characters</p>}
+                                {!formValid.passwordValid && <p>Your Password must have at least 8 characters</p>}
+
+                            </>
                         }
                     </Stack>
                     :
