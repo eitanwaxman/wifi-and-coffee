@@ -83,7 +83,7 @@ export default function Location() {
                         }
                         <h1>{thisLocation?.title}</h1>
                         <span>
-                            <a target="_blank" href={`http://maps.google.com/?q=${thisLocation?.address}`}>
+                            <a target="_blank" rel="noreferrer" href={`http://maps.google.com/?q=${thisLocation?.address}`}>
                                 {thisLocation?.address}
                             </a>
                         </span>
