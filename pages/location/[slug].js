@@ -178,7 +178,7 @@ export default function Location() {
                             {reviews.filter((review)=> review.image).slice(0,3).map((review, index) => {
                                 if (review.image) {
                                     return (
-                                        <Box sx={{
+                                        <Box key={index} sx={{
                                             position: "relative",
                                             height: "100px",
                                             minWidth: "150px",
