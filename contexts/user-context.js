@@ -45,6 +45,13 @@ export const UserProvider = ({ children }) => {
         return data;
     }
 
+    const refreshCurrentUser = async () =>{
+        refreshAccessToken();
+        const TOKEN = user.credentials.access_token;
+        const data = await getCurrentUser(TOKEN);
+        setUser((prev)=>({...prev, data}));
+    }
+
     const refreshAccessToken = async ()=>{
         // const TOKEN = user.credentials.access_token;
         const body = {
@@ -90,7 +97,7 @@ export const UserProvider = ({ children }) => {
         sessionStorage.setItem("user", JSON.stringify(defaultUser));
     }
 
-    const value = { user, updateUserCredentials, updateUserData, updateUserCookieOption, refreshAccessToken, logout }
+    const value = { user, updateUserCredentials, updateUserData, updateUserCookieOption, refreshAccessToken, refreshCurrentUser, logout }
 
     return (
         <UserContext.Provider value={value}>

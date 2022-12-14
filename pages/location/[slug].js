@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-import { Box, Stack, Rating, Button, Modal, Paper, Alert } from '@mui/material';
+import { Box, Stack, Rating, Button, Modal, Paper, Alert, Avatar } from '@mui/material';
 import Image from 'next/image'
 import Map from '../../components/map';
 import ReviewModel from '../../components/review-model';
 import Link from 'next/link';
+import MemberAvatar from '../../components/member-avatar';
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -77,7 +78,7 @@ export default function Location() {
                     gap: 2,
                     padding: 3
                 }}>
-                    <Stack>
+                    <Stack sx={{flexGrow: 1}} justifyContent="space-between">
                         {thisLocation?.status === "draft" &&
                             <Alert severity="info">This location is pending review by our moderators - you can still view it and submit reviews.</Alert>
                         }
@@ -90,18 +91,27 @@ export default function Location() {
                         <br></br>
                         {reviews?.length > 0 ?
                             <>
+
                                 <p>Coffee ☕</p>
-                                <Rating
-                                    name="coffee_rating"
-                                    value={ratings.coffee}
-                                    readOnly
-                                />
+                                <Stack direction="row" spacing={2}>
+                                    <Rating
+                                        name="coffee_rating"
+                                        precision={0.1}
+                                        value={ratings.coffee}
+                                        readOnly
+                                    />
+                                    <p>({ratings.coffee.toFixed(1)})</p>
+                                </Stack>
                                 <p>Wifi 🌐</p>
-                                <Rating
-                                    name="wifi_rating"
-                                    value={ratings.wifi}
-                                    readOnly
-                                />
+                                <Stack direction="row" spacing={2}>
+                                    <Rating
+                                        name="wifi_rating"
+                                        precision={0.1}
+                                        value={ratings.wifi}
+                                        readOnly
+                                    />
+                                    <p>({ratings.wifi.toFixed(1)})</p>
+                                </Stack>
                                 <br></br>
                                 {!displayAllReviews ?
 
@@ -114,11 +124,13 @@ export default function Location() {
                                     :
                                     <>
                                         <h3>All Reviews</h3>
+                                        <br></br>
                                         {reviews.map((review, index) =>
-                                            < div key={index}>
-                                                <p >&quot;{review.text}&quot;</p>
+                                            < Stack key={index} spacing={1}>
+                                                <MemberAvatar memberId={review.user_created} size={20} name />
+                                                <p>&quot;{review.text}&quot;</p>
                                                 <br></br>
-                                            </div>
+                                            </Stack>
                                         )}
                                     </>
                                 }
@@ -148,16 +160,40 @@ export default function Location() {
                             <ReviewModel locationId={thisLocation?._id} onSuccess={handleCloseReviewModal} />
                         </Paper>
                     </Modal>
-                    <Box sx={{
-                        position: "relative",
-                        height: "200px",
-                        maxWidth: "300px",
-                        width: "100%",
-                        borderRadius: "15px",
-                        overflow: "hidden",
-                    }}>
-                        {thisLocation?.cover_image && <Image src={thisLocation?.cover_image} alt={thisLocation?.title + thisLocation?.address + " cover image"} fill />}
-                    </Box>
+                    <Stack sx={{flexGrow: 1}}>
+                        <Box sx={{
+                            position: "relative",
+                            // height: "200px",
+                            minWidth: "300px",
+                            maxHeight: "100%",
+                            width: "100%",
+                            aspectRatio: "3/2",
+                            borderRadius: "15px",
+                            overflow: "hidden",
+                        }}>
+                            {thisLocation?.cover_image && <Image src={thisLocation?.cover_image} alt={thisLocation?.title + thisLocation?.address + " cover image"} fill />}
+                        </Box>
+                        <br></br>
+                        <Stack>
+                            {reviews.filter((review)=> review.image).slice(0,3).map((review, index) => {
+                                if (review.image) {
+                                    return (
+                                        <Box sx={{
+                                            position: "relative",
+                                            height: "100px",
+                                            minWidth: "150px",
+                                            width: "100px",
+                                            borderRadius: "15px",
+                                            overflow: "hidden",
+                                        }}>
+                                            <Image src={review?.image} alt={thisLocation?.title + thisLocation?.address + " -review-" + index} fill />
+                                        </Box>
+                                    )
+                                }
+                            }
+                            )}
+                        </Stack>
+                    </Stack>
                 </Box>
                 {thisLocation?.longitude && thisLocation?.latitude &&
                     <Map longitude={thisLocation?.longitude} latitude={thisLocation?.latitude} />

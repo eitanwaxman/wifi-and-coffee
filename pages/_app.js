@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
         <LocationProvider>
           <Navbar />
           <Component {...pageProps} />
-          <p style={{ width: "100%", textAlign: "center", padding: "10px" }}>V 0.2</p>
+          <p style={{ width: "100%", textAlign: "center", padding: "10px" }}>V 0.3</p>
         </LocationProvider>
       </ThemeProvider>
     </UserProvider>
