@@ -1,11 +1,23 @@
-import { useState, useContext, useEffect } from "react";
-import { Stack, Rating, TextField, Button, Box } from "@mui/material";
-import { UserContext } from "../contexts/user-context";
-import { v4 as uuidv4 } from 'uuid';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import FireplaceIcon from '@mui/icons-material/Fireplace';
+import OutletIcon from '@mui/icons-material/Outlet';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import VolumeMuteOutlinedIcon from '@mui/icons-material/VolumeMuteOutlined';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+import WcIcon from '@mui/icons-material/Wc';
+import { Box, Button, Checkbox, FormControlLabel, FormGroup, Rating, Stack, TextField } from "@mui/material";
+import { styled } from '@mui/material/styles';
 import { Widget } from "@uploadcare/react-widget";
-import { speedTest } from "../utils/speed-test";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { UserContext } from "../contexts/user-context";
+import { speedTest } from "../utils/speed-test";
+
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
@@ -25,7 +37,7 @@ const WIFI_RATINGS = {
 export default function ReviewModel({ locationId, onSuccess }) {
     const { user, refreshAccessToken } = useContext(UserContext);
 
-    useEffect(()=>{console.log(user)},[user])
+    useEffect(() => { console.log(user) }, [user])
 
     const [review, setReview] = useState({
         _id: uuidv4(),
@@ -34,12 +46,21 @@ export default function ReviewModel({ locationId, onSuccess }) {
         wifi_rating: null,
         location: locationId,
         image: null,
+        bathrooms: null,
+        outlets: null,
+        heating: null,
+        ac: null,
+        parking: null,
+        crowd_rating: null,
+        noise_rating: null,
     })
 
     const [hoverRatings, setHoverRatings] = useState({
         coffee: -1,
         wifi: -1
     });
+
+    const [expandedView, setExpandedView] = useState(false);
 
     const changeHandler = (event, newValue) => {
         setReview((prev) => ({ ...prev, [event.target.name]: newValue || event.target.value }))
@@ -75,10 +96,18 @@ export default function ReviewModel({ locationId, onSuccess }) {
         }
     }
 
+    const StyledRating = styled(Rating)({
+        '& .MuiRating-iconFilled': {
+            color: 'black',
+        },
+        '& .MuiRating-iconHover': {
+            color: 'black',
+        },
+    });
 
 
     return (<>
-    {!user?.data &&  <p>Please <span><Link href="/login">log in</Link></span> to leave a review</p> }
+        {!user?.data && <p>Please <span><Link href="/login">log in</Link></span> to leave a review</p>}
         <Stack spacing={2} sx={{ width: '100%' }}>
             <h3>Add a review about this location!</h3>
             <Stack direction="row" spacing={2}>
@@ -129,7 +158,69 @@ export default function ReviewModel({ locationId, onSuccess }) {
                 }}>
                     <Image src={review.image} fill />
                 </Box>}
-            {/* <Button>Add More Info</Button> */}
+            <Button onClick={() => setExpandedView((prev) => !prev)}>{expandedView ? "Show Less" : "Add More Info"}</Button>
+            {expandedView &&
+                <>
+                    <Stack direction="column">
+                        <p>Tell fellow members more about this location. Feel free to leave any criteria blank.</p>
+                        <Stack direction="row" alignItems="center">
+                            <FormGroup >
+                                <FormControlLabel control={<Checkbox onChange={changeHandler} name="bathrooms"/>} label="Bathrooms" />
+                            </FormGroup>
+                            <WcIcon />
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <FormGroup >
+                                <FormControlLabel control={<Checkbox onChange={changeHandler}  name="outlets" />} label="Outlets" />
+                            </FormGroup>
+                            <OutletIcon />
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <FormGroup >
+                                <FormControlLabel control={<Checkbox onChange={changeHandler}  name="heating"/>} label="Heating (Winter)" />
+                            </FormGroup>
+                            <FireplaceIcon />
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <FormGroup >
+                                <FormControlLabel control={<Checkbox onChange={changeHandler}  name="ac"/>} label="AC (Summer)" />
+                            </FormGroup>
+                            <AcUnitIcon />
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                            <FormGroup >
+                                <FormControlLabel control={<Checkbox onChange={changeHandler}  name="parking"/>} label="Parking" />
+                            </FormGroup>
+                            <DirectionsCarIcon />
+                        </Stack>
+                        <br></br>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <p>How crowded was it?</p>
+                            <StyledRating
+                                name="crowd_rating"
+                                precision={0.5}
+                                value={review.crowd_rating}
+                                onChange={changeHandler} 
+                                icon={<PersonIcon fontSize="inherit" />}
+                                emptyIcon={<PersonOutlineIcon fontSize="inherit" />}
+                            />
+                        </Stack>
+                        <br></br>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                            <p>How noisy was it?</p>
+                            <StyledRating
+                                name="noise_rating"
+                                precision={0.5}
+                                value={review.noise_rating}
+                                onChange={changeHandler} 
+                                icon={<VolumeUpIcon fontSize="inherit" />}
+                                emptyIcon={<VolumeUpOutlinedIcon fontSize="inherit" />}
+                            />
+                        </Stack>
+                    </Stack>
+
+                </>
+            }
             {/* add more rating options */}
             {/* add image upload option here > slideshow of images on location page */}
             <Button variant="contained" onClick={submitHandler} disabled={user.data === null}>Submit</Button>

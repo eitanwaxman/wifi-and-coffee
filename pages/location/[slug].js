@@ -1,11 +1,21 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
-import { Box, Stack, Rating, Button, Modal, Paper, Alert, Avatar } from '@mui/material';
+import { Box, Stack, Rating, Button, Modal, Paper, Alert, Avatar, Tooltip } from '@mui/material';
 import Image from 'next/image'
 import Map from '../../components/map';
 import ReviewModel from '../../components/review-model';
 import Link from 'next/link';
 import MemberAvatar from '../../components/member-avatar';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import FireplaceIcon from '@mui/icons-material/Fireplace';
+import OutletIcon from '@mui/icons-material/Outlet';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import VolumeMuteOutlinedIcon from '@mui/icons-material/VolumeMuteOutlined';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
+import WcIcon from '@mui/icons-material/Wc';
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -21,8 +31,34 @@ export default function Location() {
     const [reviews, setReviews] = useState([]);
     const [displayAllReviews, setDisplayAllReviews] = useState(false);
     const [ratings, setRatings] = useState({
-        coffee: null,
-        wifi: null,
+        coffee: { total: null, average: null },
+        wifi: { total: null, average: null },
+        crowd: { total: null, average: null },
+        noise: { total: null, average: null },
+    })
+
+    const [amenities, setAmenities] = useState({
+        bathrooms: {
+            exist: null,
+            total: null,
+        },
+        outlets: {
+            exist: null,
+            total: null,
+        },
+        heating: {
+            exist: null,
+            total: null,
+        },
+        ac: {
+            exist: null,
+            total: null,
+        },
+        parking: {
+            exist: null,
+            total: null,
+        },
+
     })
 
     const [reviewModal, setReviewModal] = useState(false);
@@ -46,6 +82,8 @@ export default function Location() {
         setReviews(data);
     }
 
+
+
     useEffect(() => {
         if (!slug) return;
         getLocation(slug);
@@ -58,14 +96,34 @@ export default function Location() {
 
     useEffect(() => {
         const coffeeRatingTotal = reviews.reduce((total, review) => total + review.coffee_rating, 0);
-        const coffeeRatingAverage = coffeeRatingTotal / reviews.length;
-        setRatings((prev) => ({ ...prev, coffee: coffeeRatingAverage }));
+        const coffeeRatingsCount = reviews.filter((review) => review.coffee_rating).length;
+        const coffeeRatingAverage = coffeeRatingTotal / coffeeRatingsCount
+        setRatings((prev) => ({ ...prev, coffee: { average: coffeeRatingAverage, total: wifiRatingsCount } }));
 
         const wifiRatingTotal = reviews.reduce((total, review) => total + review.wifi_rating, 0);
-        const wifiRatingAverage = wifiRatingTotal / reviews.length;
-        setRatings((prev) => ({ ...prev, wifi: wifiRatingAverage }));
+        const wifiRatingsCount = reviews.filter((review) => review.wifi_rating).length;
+        const wifiRatingAverage = wifiRatingTotal / wifiRatingsCount;
+        setRatings((prev) => ({ ...prev, wifi: { average: wifiRatingAverage, total: wifiRatingsCount } }));
+
+        const crowdRatingTotal = reviews.reduce((total, review) => total + review.crowd_rating, 0);
+        const crowdRatingCount = reviews.filter((review) => review.crowd_rating).length;
+        const crowdRatingAverage = crowdRatingTotal / crowdRatingCount;
+        setRatings((prev) => ({ ...prev, crowd: { average: crowdRatingAverage, total: crowdRatingCount } }));
+
+        const noiseRatingTotal = reviews.reduce((total, review) => total + review.noise_rating, 0);
+        const noiseRatingCount = reviews.filter((review) => review.noise_rating).length;
+        const noiseRatingAverage = noiseRatingTotal / noiseRatingCount;
+        setRatings((prev) => ({ ...prev, noise: { average: noiseRatingAverage, total: noiseRatingCount } }));
+
+        Object.keys(amenities).forEach((amenity) => {
+            const includesAmenity = reviews.filter((review) => review[amenity] === true);
+            if (includesAmenity.length < 1) return;
+            setAmenities((prev) => ({ ...prev, [amenity]: { exist: true, total: includesAmenity.length } }));
+        })
 
     }, [reviews])
+
+    useEffect(() => { console.log(amenities) }, [amenities])
 
     return (
         <>
@@ -78,7 +136,7 @@ export default function Location() {
                     gap: 2,
                     padding: 3
                 }}>
-                    <Stack sx={{flexGrow: 1}} justifyContent="space-between">
+                    <Stack sx={{ flexGrow: 1 }} justifyContent="space-between">
                         {thisLocation?.status === "draft" &&
                             <Alert severity="info">This location is pending review by our moderators - you can still view it and submit reviews.</Alert>
                         }
@@ -91,26 +149,53 @@ export default function Location() {
                         <br></br>
                         {reviews?.length > 0 ?
                             <>
-
+                                <Stack direction="row" spacing={1}>
+                                    {amenities.bathrooms?.exist &&
+                                        <Tooltip title={'Bathrooms (based on ' + amenities.bathrooms?.total + ' review)'}>
+                                            <WcIcon />
+                                        </Tooltip>
+                                    }
+                                    {amenities.outlets?.exist &&
+                                        <Tooltip title={'Outlets (based on ' + amenities.outlets?.total + ' review)'}>
+                                            <OutletIcon />
+                                        </Tooltip>
+                                    }
+                                    {amenities.heating?.exist &&
+                                        <Tooltip title={'Heating (based on ' + amenities.heating?.total + ' review)'}>
+                                            <FireplaceIcon />
+                                        </Tooltip>
+                                    }
+                                    {amenities.ac?.exist &&
+                                        <Tooltip title={'AC (based on ' + amenities.ac?.total + ' review)'}>
+                                            <AcUnitIcon />
+                                        </Tooltip>
+                                    }
+                                    {amenities.parking?.exist &&
+                                        <Tooltip title={'Parking (based on ' + amenities.parking?.total + ' review)'}>
+                                            <DirectionsCarIcon />
+                                        </Tooltip>
+                                    }
+                                </Stack>
+                                <br></br>
                                 <p>Coffee ☕</p>
                                 <Stack direction="row" spacing={2}>
                                     <Rating
                                         name="coffee_rating"
                                         precision={0.1}
-                                        value={ratings.coffee}
+                                        value={ratings.coffee.average}
                                         readOnly
                                     />
-                                    <p>({ratings.coffee.toFixed(1)})</p>
+                                    <p>({ratings.coffee.average.toFixed(1)}) {ratings.coffee.total} ratings</p>
                                 </Stack>
                                 <p>Wifi 🌐</p>
                                 <Stack direction="row" spacing={2}>
                                     <Rating
                                         name="wifi_rating"
                                         precision={0.1}
-                                        value={ratings.wifi}
+                                        value={ratings.wifi.average}
                                         readOnly
                                     />
-                                    <p>({ratings.wifi.toFixed(1)})</p>
+                                    <p>({ratings.wifi.average.toFixed(1)}) {ratings.wifi.total} ratings</p>
                                 </Stack>
                                 <br></br>
                                 {!displayAllReviews ?
@@ -160,7 +245,7 @@ export default function Location() {
                             <ReviewModel locationId={thisLocation?._id} onSuccess={handleCloseReviewModal} />
                         </Paper>
                     </Modal>
-                    <Stack sx={{flexGrow: 1}}>
+                    <Stack sx={{ flexGrow: 1 }}>
                         <Box sx={{
                             position: "relative",
                             // height: "200px",
@@ -175,7 +260,7 @@ export default function Location() {
                         </Box>
                         <br></br>
                         <Stack>
-                            {reviews.filter((review)=> review.image).slice(0,3).map((review, index) => {
+                            {reviews.filter((review) => review.image).slice(0, 3).map((review, index) => {
                                 if (review.image) {
                                     return (
                                         <Box key={index} sx={{
