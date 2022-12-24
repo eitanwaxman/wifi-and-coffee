@@ -199,8 +199,8 @@ export default function SubmitLocation() {
                                     onChange={changeHandler}
                                     sx={{ textAlign: "left" }}
                                 >
-                                    {LOCATION_TYPES.map((type) =>
-                                        <MenuItem value={type.value}>{type.label}</MenuItem>
+                                    {LOCATION_TYPES.map((type, index) =>
+                                        <MenuItem key={index} value={type.value}>{type.label}</MenuItem>
                                     )}
                                 </Select>
                             </FormControl>
