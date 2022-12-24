@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Manrope } from '@next/font/google'
 import Head from 'next/head';
 import { LocationProvider } from '../contexts/location-context';
+import woodBg from '../public/wood-texture.jpg'
 
 const manrope = Manrope({ subsets: ['latin'] })
 
@@ -14,7 +15,23 @@ const theme = createTheme({
       main: "#783600",
     },
   },
-
+  components: {
+    // Name of the component
+    MuiButton: {
+      styleOverrides: {
+        // Name of the slot
+        root:
+          ({ ownerState }) => ({
+            ...(ownerState.variant === 'contained' &&
+            {
+              backgroundImage: `url(${woodBg.src})`,
+              backgroundSize: "cover",
+              fontSize: '1rem',
+            })
+          }),
+      },
+    },
+  }
 });
 
 

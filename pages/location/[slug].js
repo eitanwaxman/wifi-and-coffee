@@ -16,6 +16,7 @@ import VolumeMuteOutlinedIcon from '@mui/icons-material/VolumeMuteOutlined';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import WcIcon from '@mui/icons-material/Wc';
+import { LOCATION_TYPES } from '../../utils/dropdown-options';
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -146,6 +147,10 @@ export default function Location() {
                                 {thisLocation?.address}
                             </a>
                         </span>
+                        <br></br>
+                        <Paper elevation={0} sx={{ width: "min-content", padding: 1, backgroundColor: "rgba(120,54,0, 0.3)" }}>
+                            {thisLocation?.type && <p>{LOCATION_TYPES.find((type) => type.value === thisLocation?.type).label}</p>}
+                        </Paper>
                         <br></br>
                         {reviews?.length > 0 ?
                             <>

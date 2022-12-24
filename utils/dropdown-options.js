@@ -1,3 +1,35 @@
+export const LOCATION_TYPES = [
+    {
+        label: "Cafe or Bakery", 
+        value: "cafe",
+    },
+    {
+        label: "Restaurant", 
+        value: "restaurant",
+    },
+    {
+        label: "Fast Food Place", 
+        value: "fast food",
+    },
+    {
+        label: "Co-Working Space (WeWork, Industrious, Lounges, Clubs etc.)", 
+        value: "co-working",
+    },
+    {
+        label: "Cafe or Bakery", 
+        value: "cafe",
+    },
+    {
+        label: "Library", 
+        value: "library",
+    },
+    {
+        label: "Other Public Space (Atrium, Park etc.)", 
+        value: "public",
+    },
+
+]
+
 export const WORK_STYLES = [
     "Freelancer",
     "Entrepreneur",

@@ -1,9 +1,10 @@
-import { AppBar, Stack, Button, Avatar, Drawer, IconButton } from "@mui/material";
+import { AppBar, Stack, Button, Avatar, Drawer, IconButton, Box } from "@mui/material";
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user-context";
 import MenuIcon from '@mui/icons-material/Menu';
+import woodBg from '../public/wood-texture.jpg'
 
 
 
@@ -31,14 +32,23 @@ export default function Navbar() {
     return (
         <>
             <AppBar position="static" sx={{
+                position: "relative",
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "0 2% 0",
+                backgroundImage: `url(${woodBg.src})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "repeat",
+                boxShadow: "0px 5px 10px rgba(0,0,0,0.8)",
+                zIndex: 1000,
             }}>
                 {!mobile ?
-                    <Stack direction="row" spacing={5} sx={{ padding: 2, margin: "auto", alignItems: "center" }}>
+                    <Stack direction="row" spacing={5} sx={{ padding: 2, marginRight: "auto", alignItems: "center" }}>
+                        <Box sx={{ background: "white", width: "50px", height: "50px", overflow: "none" }}>
+                            <img src="/logo.svg" />
+                        </Box>
                         <Link href="/">Home</Link>
                         <Link href="/locations">Browse</Link>
                         <Link href="/submit-location">Add</Link>

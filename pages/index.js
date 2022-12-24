@@ -21,24 +21,28 @@ export default function Home() {
 
   return (
     <>
+      <div className={styles["hero-image"]}>
+        <Image style={{objectFit: "cover"}} src="/coffee-shop.jpg" fill/>
+        <div style={{ position: "relative", width: "100%", height: "100%", background: "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1))", zIndex: 1 }}></div>
+      </div>
       <Box sx={{
+        position: "absolute",
+        top: 50,
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 2,
+        padding: "10%",
+        paddingTop: "15%",
         // height: "max-content",
       }}>
         <Container sx={{ padding: 3 }}>
-          <Stack sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
-            <Box sx={{ width: "100%", maxWidth: "500px" }}>
-              <img src="/logo.svg" />
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3, fontSize: "1.7rem", maxWidth: "500px" }}>
-              <h1>A Home for Remote Workers</h1>
-              <p>Discover, share, and review the best remote work and study locations in NYC</p>
-              <Button variant="contained" onClick={waitlistHandler}>Join The Waitlist</Button>
-            </Box>
-          </Stack>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, color: "white", fontSize: "1.7rem", textShadow: "2px 2px 2px black", maxWidth: "500px" }}>
+            <h1 className={styles["home-title"]}>A Home for Remote Workers</h1>
+            <p className={styles["home-text"]}>Discover, share, and review the best remote work and study locations in NYC</p>
+            <Button variant="contained" onClick={waitlistHandler}>Join The Club</Button>
+          </Box>
         </Container>
       </Box>
     </>

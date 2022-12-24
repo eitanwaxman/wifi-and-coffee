@@ -1,5 +1,5 @@
 
-import { Autocomplete, Box, Stack, TextField, Button, Paper } from "@mui/material";
+import { Autocomplete, Box, Stack, TextField, Button, Paper, Select, InputLabel, FormControl, MenuItem } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/user-context";
 import { Widget } from "@uploadcare/react-widget";
@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import Map from "../components/map"
 import { LocationContext } from "../contexts/location-context";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { LOCATION_TYPES } from "../utils/dropdown-options";
 
 
 
@@ -35,6 +36,7 @@ export default function SubmitLocation() {
     const [locationData, setLocationData] = useState({
         _id: uuidv4(),
         title: "",
+        type: "",
         address: "",
         latitude: "",
         longitude: "",
@@ -186,6 +188,22 @@ export default function SubmitLocation() {
                     {!locationSubmitted ?
                         <Stack spacing={2} sx={{ width: '100%', maxWidth: "500px", textAlign: "center" }}>
                             <TextField id="title" name="title" label="Title" variant="outlined" required onChange={changeHandler} />
+                            <FormControl fullWidth>
+                                <InputLabel id="type-select-label">Type</InputLabel>
+                                <Select
+                                    labelId="type-select-label"
+                                    id="type-select"
+                                    name="type"
+                                    value={locationData.type}
+                                    label="Type"
+                                    onChange={changeHandler}
+                                    sx={{ textAlign: "left" }}
+                                >
+                                    {LOCATION_TYPES.map((type) =>
+                                        <MenuItem value={type.value}>{type.label}</MenuItem>
+                                    )}
+                                </Select>
+                            </FormControl>
                             <Autocomplete
                                 name="address"
                                 options={addressOptions}
@@ -222,6 +240,9 @@ export default function SubmitLocation() {
                                 borderRadius: "15px",
                                 overflow: "hidden"
                             }}>
+                                <Paper elevation={0} sx={{width: "min-content", padding: 1, backgroundColor: "rgba(120,54,0, 0.3)"}}>
+                                    {locationData.type && <p>{LOCATION_TYPES.find((type) => type.value === locationData.type).label}</p>}
+                                </Paper>
                                 {locationData.cover_image && <Image src={locationData.cover_image} fill />}
                                 {locationData.longitude && locationData.latitude && <Map longitude={locationData.longitude} latitude={locationData.latitude} />}
                             </Box>

@@ -115,8 +115,8 @@ export default function SignupModel() {
                     </Stack>
                     :
                     <Stack spacing={2} textAlign="center">
-                        <p>Thanks for joining the waitlist! </p>
-                        <p>You now have observer status and can <span><Link href="/locations">browse our locations</Link></span></p>
+                        <p>Welcome to the Club! </p>
+                        <p>You can now <span><Link href="/submit-location">add locations</Link></span> and review locations submitted by others.</p>
                     </Stack>
                 }
             </Box>
