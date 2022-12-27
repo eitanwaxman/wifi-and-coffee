@@ -223,7 +223,7 @@ export default function ReviewModel({ locationId, onSuccess }) {
             }
             {/* add more rating options */}
             {/* add image upload option here > slideshow of images on location page */}
-            <Button variant="contained" onClick={submitHandler} disabled={user.data === null}>Submit</Button>
+            <Button variant="contained" onClick={submitHandler} disabled={user?.data === null}>Submit</Button>
         </Stack>
     </>)
 }

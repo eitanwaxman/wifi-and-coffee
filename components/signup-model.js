@@ -94,7 +94,7 @@ export default function SignupModel() {
             }}>
                 {!signupComplete ?
                     <Stack spacing={2} textAlign="center">
-                        <h1>Join the Waitlist</h1>
+                        <h1>Join the Club</h1>
                         <p>Already have an account? Click <span><Link href="/login">here</Link></span> to log in</p>
                         <Stack spacing={2} direction="row">
                             <TextField id="firstName" name="first_name" label="First Name" variant="outlined" required onChange={inputChangeHandler} error={!formValid.fNameValid} />
