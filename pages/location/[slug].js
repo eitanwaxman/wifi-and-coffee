@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
 import { Box, Stack, Rating, Button, Modal, Paper, Alert, Avatar, Tooltip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Image from 'next/image'
 import Map from '../../components/map';
 import ReviewModel from '../../components/review-model';
@@ -17,19 +18,75 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeUpOutlinedIcon from '@mui/icons-material/VolumeUpOutlined';
 import WcIcon from '@mui/icons-material/Wc';
 import { LOCATION_TYPES } from '../../utils/dropdown-options';
+import Head from 'next/head'
+
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
+export async function getStaticPaths() {
+
+    const getLocations = async () => {
+        const response = await fetch(DIRECTUS_DOMAIN + "/items/locations?limit=-1");
+        const { data } = await response.json();
+        console.log(data);
+        return data;
+    }
+    const locations = await getLocations();
+
+    const paths = locations.map((location) => ({ params: { slug: location.slug } }))
+
+    return {
+        paths,
+        fallback: false
+    };
+}
 
 
-export default function Location() {
+export async function getStaticProps({ params }) {
+    const { slug } = params;
+
+    const getLocation = async (slug) => {
+        const response = await fetch(DIRECTUS_DOMAIN + `/items/locations?filter[slug][_eq]=${slug}`);
+        const { data } = await response.json();
+        console.log("getLocation", data);
+        return data[0];
+    }
+
+    const getReviews = async (location) => {
+        const response = await fetch(DIRECTUS_DOMAIN + `/items/reviews?filter[location][_eq]=${location?._id}`);
+        const { data } = await response.json();
+        console.log("getReviews", data);
+
+        if (data.length < 1) return;
+        return data
+    }
+
+    const locationProp = await getLocation(slug);
+    const reviewsProp = await getReviews(locationProp);
+
+    // Pass post data to the page via props
+    return { props: { locationProp, reviewsProp } }
+}
+
+const StyledRating = styled(Rating)({
+    '& .MuiRating-iconFilled': {
+        color: 'black',
+    },
+    '& .MuiRating-iconHover': {
+        color: 'black',
+    },
+});
+
+
+
+export default function Location({ locationProp, reviewsProp }) {
 
     const router = useRouter()
     const { slug } = router.query;
 
-    const [thisLocation, setThisLocation] = useState();
-    const [reviews, setReviews] = useState([]);
+    const [thisLocation, setThisLocation] = useState(locationProp);
+    const [reviews, setReviews] = useState(reviewsProp);
     const [displayAllReviews, setDisplayAllReviews] = useState(false);
     const [ratings, setRatings] = useState({
         coffee: { total: null, average: null },
@@ -85,17 +142,17 @@ export default function Location() {
 
 
 
-    useEffect(() => {
-        if (!slug) return;
-        getLocation(slug);
-    }, [slug])
+    // useEffect(() => {
+    //     if (!slug) return;
+    //     getLocation(slug);
+    // }, [slug])
 
-    useEffect(() => {
-        if (location.length < 1) return;
-        getReviews();
-    }, [thisLocation])
+    // useEffect(() => {
+    //     if (location.length < 1) return;
+    //     getReviews();
+    // }, [thisLocation])
 
-    useEffect(() => {
+    const calculateReviews = () => {
         const coffeeRatingTotal = reviews.reduce((total, review) => total + review.coffee_rating, 0);
         const coffeeRatingsCount = reviews.filter((review) => review.coffee_rating).length;
         const coffeeRatingAverage = coffeeRatingTotal / coffeeRatingsCount
@@ -121,13 +178,43 @@ export default function Location() {
             if (includesAmenity.length < 1) return;
             setAmenities((prev) => ({ ...prev, [amenity]: { exist: true, total: includesAmenity.length } }));
         })
+    }
 
+
+    useEffect(() => {
+        calculateReviews();
     }, [reviews])
 
-    useEffect(() => { console.log(amenities) }, [amenities])
 
     return (
         <>
+
+            <Head>
+                <title>{thisLocation?.title} - {thisLocation?.type}</title>
+                <meta name="description" content={`${thisLocation?.title} is a ${thisLocation?.type} located at ${thisLocation?.address}. Find out more about this location and leave a review at Wifi and Coffee Club.`} />
+                <meta name="keywords" content={`${thisLocation?.title}, ${thisLocation?.type}, ${thisLocation?.address}, Wifi and Coffee Club, remote work, cafes, co-working spaces, work location, reviews`} />
+                <meta name="author" content="Wifi and Coffee Club" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="robots" content="index, follow" />
+
+                {/* <!-- Search Engine --> */}
+                <meta name="google-site-verification" content="verification_code" />
+                <link rel="canonical" href={`https://www.wifiandcoffee.club/location/${thisLocation?.slug}`} />
+
+                {/* <!-- Social Media --> */}
+                <meta property="og:title" content={`${thisLocation?.title} - ${thisLocation?.type}`} />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={`https://www.wifiandcoffee.club/location/${thisLocation.slug}`} />
+                <meta property="og:image" content={thisLocation?.cover_image} />
+                <meta property="og:description" content={`${thisLocation?.title} is a ${thisLocation?.type} located at ${thisLocation?.address}. Find out more about this location and leave a review at Wifi and Coffee Club.`} />
+
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:title" content={`${thisLocation?.title} - ${thisLocation?.type}`} />
+                <meta name="twitter:description" content={`${thisLocation?.title} is a ${thisLocation?.type} located at ${thisLocation?.address}. Find out more about this location and leave a review at Wifi and Coffee Club.`} />
+                <meta name="twitter:image" content={thisLocation?.cover_image} />
+            </Head>
+
+
             <Box>
                 <Box sx={{
                     display: "flex",
@@ -148,7 +235,7 @@ export default function Location() {
                             </a>
                         </span>
                         <br></br>
-                        <Paper elevation={0} sx={{ width: "min-content", padding: 1, backgroundColor: "rgba(120,54,0, 0.3)" }}>
+                        <Paper elevation={0} sx={{ width: "min-content", padding: 1, whiteSpace: "nowrap", backgroundColor: "rgba(120,54,0, 0.3)" }}>
                             {thisLocation?.type && <p>{LOCATION_TYPES.find((type) => type.value === thisLocation?.type).label}</p>}
                         </Paper>
                         <br></br>
@@ -190,7 +277,7 @@ export default function Location() {
                                         value={ratings.coffee.average}
                                         readOnly
                                     />
-                                    <p>({ratings.coffee.average.toFixed(1)}) {ratings.coffee.total} ratings</p>
+                                    <p>({ratings.coffee.average?.toFixed(1)}) {ratings.coffee.total} ratings</p>
                                 </Stack>
                                 <p>Wifi 🌐</p>
                                 <Stack direction="row" spacing={2}>
@@ -200,7 +287,30 @@ export default function Location() {
                                         value={ratings.wifi.average}
                                         readOnly
                                     />
-                                    <p>({ratings.wifi.average.toFixed(1)}) {ratings.wifi.total} ratings</p>
+                                    <p>({ratings.wifi.average?.toFixed(1)}) {ratings.wifi.total} ratings</p>
+                                </Stack>
+                                <br></br>
+                                <p>Crowd 👥</p>
+                                <Stack direction="row" spacing={2}>
+                                    <StyledRating
+                                        name="crowd_rating"
+                                        value={ratings.crowd.average}
+                                        icon={<PersonIcon fontSize="inherit" />}
+                                        emptyIcon={<PersonOutlineIcon fontSize="inherit" />}
+                                        readOnly
+                                    />
+                                    <p>({ratings.crowd.average?.toFixed(1)}) {ratings.crowd.total} ratings</p>
+                                </Stack>
+                                <p>Noise 🔊</p>
+                                <Stack direction="row" spacing={2}>
+                                    <StyledRating
+                                        name="noise_rating"
+                                        value={ratings.noise.avergae}
+                                        icon={<VolumeUpIcon fontSize="inherit" />}
+                                        emptyIcon={<VolumeUpOutlinedIcon fontSize="inherit" />}
+                                        readOnly
+                                    />
+                                    <p>({ratings.noise.average?.toFixed(1)}) {ratings.noise.total} ratings</p>
                                 </Stack>
                                 <br></br>
                                 {!displayAllReviews ?

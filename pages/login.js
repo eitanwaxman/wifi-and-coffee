@@ -3,6 +3,8 @@ import { useState, useContext } from "react";
 import { UserContext } from "../contexts/user-context";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from 'next/head'
+
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
 
@@ -53,6 +55,11 @@ export default function Login() {
 
     return (
         <>
+
+            <Head>
+                <title>Login - Wifi and Coffee Club</title>
+            </Head>
+
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',

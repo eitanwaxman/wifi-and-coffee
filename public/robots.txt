@@ -1,0 +1,9 @@
+# Block all crawlers for /profile
+User-agent: *
+Disallow: /profile
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+Sitemap: https://www.wifiandcoffee.club/sitemap.xml

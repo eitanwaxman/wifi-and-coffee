@@ -4,6 +4,7 @@ import { Box, Stack, Paper, Button, TextField, IconButton, InputAdornment } from
 import Image from "next/image";
 import { LocationContext } from "../contexts/location-context";
 import ClearIcon from '@mui/icons-material/Clear';
+import Head from 'next/head'
 
 
 const DIRECTUS_DOMAIN = "https://555qkb69.directus.app";
@@ -71,13 +72,39 @@ export default function Locations() {
 
     return (
         <>
+
+            <Head>
+                <title>Locations - Wifi and Coffee Club</title>
+                <meta name="description" content="Browse and search for the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+                <meta name="keywords" content="Locations, Wifi and Coffee Club, remote work, cafes, co-working spaces, work location, reviews" />
+                <meta name="author" content="Wifi and Coffee Club" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="robots" content="index, follow" />
+
+                {/* <!-- Search Engine --> */}
+                <meta name="google-site-verification" content="verification_code" />
+                <link rel="canonical" href="https://www.wifiandcoffee.club/locations" />
+
+                {/* <!-- Social Media --> */}
+                <meta property="og:title" content="Locations - Wifi and Coffee Club" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://www.wifiandcoffee.club/locations" />
+                <meta property="og:image" content="https://www.wifiandcoffee.club/coffee-shop.jpg" />
+                <meta property="og:description" content="Browse and search for the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:title" content="Locations - Wifi and Coffee Club" />
+                <meta name="twitter:description" content="Browse and search for the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+                <meta name="twitter:image" content="https://www.wifiandcoffee.club/coffee-shop.jpg" />
+            </Head>
+
             <Box sx={{
                 padding: 3,
                 textAlign: "center"
             }}>
                 <Stack spacing={1} sx={{ maxWidth: "1200px", textAlign: "center", margin: "auto", fontSize: "1.5rem" }}>
                     <h1>Browse Locations</h1>
-                    <p style={{fontSize: "1.2rem"}}>Find the ideal place to sink in for some work, a study session, or just a nice cup of joe...</p>
+                    <p style={{ fontSize: "1.2rem" }}>Find the ideal place to sink in for some work, a study session, or just a nice cup of joe...</p>
                     <TextField
                         onChange={changeHandler}
                         sx={{ outline: "2px solid #783600", borderRadius: "5px" }}

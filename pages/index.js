@@ -6,6 +6,8 @@ import { Box, Typography, Stack, Button, Container } from '@mui/material'
 import { useRouter } from 'next/router'
 import styles from '../styles/Home.module.css'
 
+
+
 export default function Home() {
 
   const router = useRouter();
@@ -21,8 +23,34 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Wifi and Coffee Club - Find the Perfect Remote Work Location</title>
+        <meta name="description" content="Find the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+        <meta name="keywords" content="Wifi and Coffee Club, remote work, cafes, co-working spaces, work location, reviews" />
+        <meta name="author" content="Wifi and Coffee Club" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+
+        {/* <!-- Search Engine --> */}
+        <meta name="google-site-verification" content="verification_code" />
+        <link rel="canonical" href="https://www.wifiandcoffee.club/" />
+
+        {/* <!-- Social Media --> */}
+        <meta property="og:title" content="Wifi and Coffee Club - Find the Perfect Remote Work Location" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.wifiandcoffee.club/" />
+        <meta property="og:image" content="https://www.wifiandcoffee.club/coffee-shop.jpg" />
+        <meta property="og:description" content="Find the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Wifi and Coffee Club - Find the Perfect Remote Work Location" />
+        <meta name="twitter:description" content="Find the perfect remote work location at Wifi and Coffee Club. Our listings include cafes, co-working spaces, and more. Leave reviews and find the best places to get work done and enjoy a cup of coffee." />
+        <meta name="twitter:image" content="https://www.wifiandcoffee.club/coffee-shop.jpg" />
+      </Head>
+
+
       <div className={styles["hero-image"]}>
-        <Image style={{objectFit: "cover"}} src="/coffee-shop.jpg" fill/>
+        <Image style={{ objectFit: "cover" }} src="/coffee-shop.jpg" fill />
         <div style={{ position: "relative", width: "100%", height: "100%", background: "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1))", zIndex: 1 }}></div>
       </div>
       <Box sx={{
