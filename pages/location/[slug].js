@@ -34,7 +34,7 @@ export async function getStaticPaths() {
     }
     const locations = await getLocations();
 
-    const paths = locations.map((location) => ({ params: { slug: location.slug } }))
+    const paths = locations.map((location) => ({ params: { slug: location?.slug } }))
 
     return {
         paths,
