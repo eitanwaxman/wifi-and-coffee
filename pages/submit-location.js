@@ -232,20 +232,32 @@ export default function SubmitLocation() {
                         <Stack spacing={1}>
                             <h3>{locationData.title ? locationData.title : "Title"}</h3>
                             <p>{locationData.address ? locationData.address : "Address"}</p>
+                            <Paper elevation={0} sx={{ width: "min-content", padding: 1, whiteSpace: "nowrap", backgroundColor: "rgba(120,54,0, 0.3)" }}>
+                                {locationData.type && <p>{LOCATION_TYPES.find((type) => type.value === locationData.type).label}</p>}
+                            </Paper>
                             <Box sx={{
                                 position: "relative",
-                                height: "250px",
-                                //minWidth: "300px",
-                                width: "300",
+                                minWidth: "300px",
+                                maxHeight: "100%",
+                                width: "100%",
+                                aspectRatio: "3/2",
                                 borderRadius: "15px",
                                 overflow: "hidden"
                             }}>
-                                <Paper elevation={0} sx={{width: "min-content", padding: 1, backgroundColor: "rgba(120,54,0, 0.3)"}}>
-                                    {locationData.type && <p>{LOCATION_TYPES.find((type) => type.value === locationData.type).label}</p>}
-                                </Paper>
                                 {locationData.cover_image && <Image src={locationData.cover_image} fill />}
-                                {locationData.longitude && locationData.latitude && <Map longitude={locationData.longitude} latitude={locationData.latitude} />}
                             </Box>
+                            <Box sx={{
+                                position: "relative",
+                                minWidth: "300px",
+                                maxHeight: "100%",
+                                width: "100%",
+                                aspectRatio: "1/1",
+                                borderRadius: "15px",
+                                overflow: "hidden"
+                            }}>
+                                  {locationData.longitude && locationData.latitude && <Map longitude={locationData.longitude} latitude={locationData.latitude} />}
+                            </Box>
+                         
                         </Stack>
                     </Paper>
                 </Stack>
