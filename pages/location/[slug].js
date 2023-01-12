@@ -153,23 +153,23 @@ export default function Location({ locationProp, reviewsProp }) {
     // }, [thisLocation])
 
     const calculateReviews = () => {
-        const coffeeRatingTotal = reviews.reduce((total, review) => total + review.coffee_rating, 0);
-        const coffeeRatingsCount = reviews.filter((review) => review.coffee_rating).length;
+        const coffeeRatingTotal = reviews?.reduce((total, review) => total + review.coffee_rating, 0);
+        const coffeeRatingsCount = reviews?.filter((review) => review.coffee_rating).length;
         const coffeeRatingAverage = coffeeRatingTotal / coffeeRatingsCount
         setRatings((prev) => ({ ...prev, coffee: { average: coffeeRatingAverage, total: wifiRatingsCount } }));
 
-        const wifiRatingTotal = reviews.reduce((total, review) => total + review.wifi_rating, 0);
-        const wifiRatingsCount = reviews.filter((review) => review.wifi_rating).length;
+        const wifiRatingTotal = reviews?.reduce((total, review) => total + review.wifi_rating, 0);
+        const wifiRatingsCount = reviews?.filter((review) => review.wifi_rating).length;
         const wifiRatingAverage = wifiRatingTotal / wifiRatingsCount;
         setRatings((prev) => ({ ...prev, wifi: { average: wifiRatingAverage, total: wifiRatingsCount } }));
 
-        const crowdRatingTotal = reviews.reduce((total, review) => total + review.crowd_rating, 0);
-        const crowdRatingCount = reviews.filter((review) => review.crowd_rating).length;
+        const crowdRatingTotal = reviews?.reduce((total, review) => total + review.crowd_rating, 0);
+        const crowdRatingCount = reviews?.filter((review) => review.crowd_rating).length;
         const crowdRatingAverage = crowdRatingTotal / crowdRatingCount;
         setRatings((prev) => ({ ...prev, crowd: { average: crowdRatingAverage, total: crowdRatingCount } }));
 
-        const noiseRatingTotal = reviews.reduce((total, review) => total + review.noise_rating, 0);
-        const noiseRatingCount = reviews.filter((review) => review.noise_rating).length;
+        const noiseRatingTotal = reviews?.reduce((total, review) => total + review.noise_rating, 0);
+        const noiseRatingCount = reviews?.filter((review) => review.noise_rating).length;
         const noiseRatingAverage = noiseRatingTotal / noiseRatingCount;
         setRatings((prev) => ({ ...prev, noise: { average: noiseRatingAverage, total: noiseRatingCount } }));
 
