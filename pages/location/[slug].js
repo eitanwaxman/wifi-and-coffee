@@ -174,7 +174,7 @@ export default function Location({ locationProp, reviewsProp }) {
         setRatings((prev) => ({ ...prev, noise: { average: noiseRatingAverage, total: noiseRatingCount } }));
 
         Object.keys(amenities).forEach((amenity) => {
-            const includesAmenity = reviews.filter((review) => review[amenity] === true);
+            const includesAmenity = reviews?.filter((review) => review[amenity] === true);
             if (includesAmenity.length < 1) return;
             setAmenities((prev) => ({ ...prev, [amenity]: { exist: true, total: includesAmenity.length } }));
         })
@@ -377,7 +377,7 @@ export default function Location({ locationProp, reviewsProp }) {
                         </Box>
                         <br></br>
                         <Stack>
-                            {reviews.filter((review) => review.image).slice(0, 3).map((review, index) => {
+                            {reviews?.filter((review) => review.image).slice(0, 3).map((review, index) => {
                                 if (review.image) {
                                     return (
                                         <Box key={index} sx={{
