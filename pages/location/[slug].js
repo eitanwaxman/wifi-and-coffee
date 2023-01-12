@@ -204,7 +204,7 @@ export default function Location({ locationProp, reviewsProp }) {
                 {/* <!-- Social Media --> */}
                 <meta property="og:title" content={`${thisLocation?.title} - ${thisLocation?.type}`} />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content={`https://www.wifiandcoffee.club/location/${thisLocation.slug}`} />
+                <meta property="og:url" content={`https://www.wifiandcoffee.club/location/${thisLocation?.slug}`} />
                 <meta property="og:image" content={thisLocation?.cover_image} />
                 <meta property="og:description" content={`${thisLocation?.title} is a ${thisLocation?.type} located at ${thisLocation?.address}. Find out more about this location and leave a review at Wifi and Coffee Club.`} />
 
